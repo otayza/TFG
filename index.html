@@ -1,0 +1,97 @@
+<!-- Documento HTML con el esqueleto de la aplicación. Es el único HTML del proyecto.
+    Utilizo la visibilidad por la propiedad display evitando la creación y eliminación de elementos del DOM.
+-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Picsite - Comparte tus momentos</title>
+    <link href="./index.css" rel="stylesheet">
+    <script src="./index.js"></script>
+    <script src="./foto.js"></script>
+    <script src="https://kit.fontawesome.com/d9eef2376a.js"></script>
+    <link rel="shortcut icon" href="imagenes/icono.png">
+</head>
+
+<body>
+    <header>
+        <img src="./imagenes/logofinal.png" id="logo">
+        <div id="validarUsuario">
+            <div id="inicioSesion">Iniciar Sesión</div>
+            <div id="registro">Registrarse</div>
+        </div>
+        <div id="busqueda"><input type="text" id="buscador" placeholder="Busca lo que quieras (ej: mascostas)">
+            <div id="buscar">Buscar</div>
+        </div>
+        <div id="usu">Usuario</div>
+        <i class="fas fa-upload fa-2x" id="subirImagen"></i>
+        <i class="fas fa-sign-out-alt fa-2x" id="cerrarSesion"></i>
+    </header>
+    <section>
+        <div id="inicio">
+            <div id="eslogan">PicSite<br>Observa el mundo, comparte el tuyo</div>
+        </div>
+        <div id="contenedor"></div>
+        <div id="comentarImagen">
+            <div id="comentarios">
+                <textarea id="miComentario"></textarea>
+                <div id="comentar">Comentar</div>
+                <div id="comentariosUsuarios"></div>
+            </div>
+            <i class="fas fa-arrow-left fa-2x" id="atras"></i>
+        </div>
+    </section>
+    <div class="modal" id="formularioInicioSesion">
+        <form>
+            <h7>Bienvenido de nuevo</h7>
+            <div>
+                <label>Correo electrónico</label><input type="text">
+            </div>
+            <div>
+                <label>Contraseña</label><input type="password" id="pwd2">
+            </div>
+            <div id="iniciarSesion">Iniciar sesión</div>
+        </form>
+    </div>
+    <div class="modal" id="cargarImagen">
+        <form>
+            <h7>¡Sube tu propia imagen!</h7>
+            <div id="vistaPrevia"></div>
+            <input type="file" id="miImagen">
+            <div>
+                <label>Descripción</label>
+                <br>
+                <textarea id="descripcion"></textarea>
+            </div>
+            <div>
+                <label>Etiquetas</label>
+                <br>
+                <input type="text" id="etiquetas">
+            </div>
+            <div id="subir">Subir mi imagen</div>
+        </form>
+    </div>
+
+    <div class="modal" id="formularioRegistro">
+        <form>
+            <h7>Encantados de conocerte</h7>
+            <div>
+                <label>Nombre de usuario</label><input type="text" id="user">
+            </div>
+            <div>
+                <label>Correo electrónico</label><input type="text" id="email">
+            </div>
+            <div>
+                <label>Contraseña</label><input type="password" id="pwd">
+            </div>
+            <!--<div>
+                <label>Edad</label><input type="number" maxlength="3" id="edad">
+            </div>-->
+            <div id="registrarse">Registrarse</div>
+        </form>
+    </div>
+
+    <div id="alert"></div>
+</body>
+
+</html>
