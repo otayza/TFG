@@ -19,14 +19,12 @@ let numeroLikes;
 
 function iniciar() {
     document.querySelector("#inicioSesion").onclick = () => {
-        //document.querySelector("#formularioInicioSesion").style.display = "block";
-        mostrarElemento("formularioInicioSesion");
+        document.querySelector("#formularioInicioSesion").style.display = "block";
         document.querySelector("#formularioRegistro").style.display = "none";
     }
 
     document.querySelector("#registro").onclick = () => {
-        //document.querySelector("#formularioRegistro").style.display = "block";
-        mostrarElemento("formularioRegistro");
+        document.querySelector("#formularioRegistro").style.display = "block";
         document.querySelector("#formularioInicioSesion").style.display = "none";
     }
 
@@ -34,18 +32,32 @@ function iniciar() {
     ocultarModal("formularioInicioSesion");
     ocultarModal("cargarImagen");
 
-    document.querySelector("#buscar").onclick = () => { buscarImagenesUsuarios(); busquedaNueva() }
+    document.querySelector("#buscar").onclick = () => { buscarImagenesUsuarios();busquedaNueva() }
     document.querySelector("#buscador").onkeypress = function (e) {
-        if (e.keyCode == 13) { buscarImagenesUsuarios(); busquedaNueva() }
+        if (e.keyCode == 13) { buscarImagenesUsuarios();busquedaNueva() }
     }
 
-    document.querySelector("#iniciarSesion").onclick = () => { comprobarFormulario("iniciarSesion") }
+    document.querySelector("#iniciarSesion").onclick = () => {
+        if (comprobarFormulario("iniciarSesion")) {
+            document.querySelector("#formularioInicioSesion").style.display = "none";
+        }
+    }
 
-    document.querySelector("#pwd2").onkeypress = function (e) { if (e.keyCode == 13) { comprobarFormulario("iniciarSesion"); } }
+    document.querySelector("#pwd2").onkeypress = function (e) {
+        if (e.keyCode == 13) {
+            if (comprobarFormulario("iniciarSesion")) {
+                document.querySelector("#formularioInicioSesion").style.display = "none";
+            }
+        }
+    }
 
-    document.querySelector("#registrarse").onclick = () => { comprobarFormulario("registrarse") }
+    document.querySelector("#registrarse").onclick = () => {
+        if (comprobarFormulario("registrarse")) {
+            document.querySelector("#formularioRegistro").style.display = "none";
+        }
+    }
 
-    document.querySelector("#pwd").onkeypress = function (e) {
+    document.querySelector("#edad").onkeypress = function (e) {
         if (e.keyCode == 13) {
             if (comprobarFormulario("registrarse")) {
                 document.querySelector("#formularioRegistro").style.display = "none";
@@ -57,8 +69,7 @@ function iniciar() {
     document.querySelector("#cerrarSesion").onclick = cerrarSesion;
     document.querySelector("#atras").onclick = () => {
         document.querySelector("#comentarImagen").style.display = "none";
-        //document.querySelector("#contenedor").style.display = "flex";
-        mostrarElemento("contenedor");
+        document.querySelector("#contenedor").style.display = "flex";
     }
 
     document.querySelector("#comentar").onclick = comentarioNuevo;
@@ -66,17 +77,12 @@ function iniciar() {
     document.querySelector("#email").onkeyup = function () { comprobarCampo("#email") ? this.style.border = "4px solid greenyellow" : this.style.border = "3px solid red" };
     document.querySelector("#pwd").onkeyup = function () { comprobarCampo("#pwd") ? this.style.border = "4px solid greenyellow" : this.style.border = "3px solid red" };
 
-document.querySelector("#subirImagen").onclick = () => { /*document.querySelector("#cargarImagen").style.display = "flex"*/ mostrarElemento("cargarImagen")};
+    document.querySelector("#subirImagen").onclick = () => { document.querySelector("#cargarImagen").style.display = "flex" };
 
     document.querySelector("#miImagen").onchange = () => {
         subirImagen(document.querySelector("#miImagen").files[0]);
-        //document.querySelector("#vistaPrevia").style.display = "block";
-        mostrarElemento("vistaPrevia");
+        document.querySelector("#vistaPrevia").style.display = "block";
     }
-    click=0;
-    
-        document.body.onclick=()=>{click=click+1;if(click==10){window.alert("Hola, ¿te gusta esta pequeña red social? Soy Eduardo Otayza, su creador, y te animo a contactar conmigo para cualquier proyecto: +34 611-055-926 otayzacode@gmail.com")};let time=setTimeout(()=>{click=0},3000)}
-
 }
 
 /**
@@ -88,17 +94,18 @@ document.querySelector("#subirImagen").onclick = () => { /*document.querySelecto
 
 function cargarImagenes() {
     let envio = new XMLHttpRequest();
+    numFotosCargadas = 3;
     envio.onreadystatechange = () => {
         if (envio.readyState == 4 && envio.status == 200) {
             var fotos = JSON.parse(envio.responseText);
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < numFotosCargadas; i++) {
                 let ele = new Foto(fotos['hits'][i]['largeImageURL'], fotos['hits'][i]['user']);
                 document.querySelector("#inicio").append(ele.getFoto2);
             }
         }
     }
     var API_KEY = '21329306-be536672394d00fac6fe8d571';
-    var url = "https://pixabay.com/api/?key=" + API_KEY + "&q=" + encodeURIComponent("planeta tierra") + "&per_page=3";
+    var url = "https://pixabay.com/api/?key=" + API_KEY + "&q=" + encodeURIComponent("planeta tierra") + "&per_page=10&image_type='photos'&lang=es";
     envio.open("GET", url, true);
     envio.send();
 }
@@ -149,7 +156,7 @@ function buscarImagenes(busqueda, inicio) {
     }
 
     var API_KEY = '21329306-be536672394d00fac6fe8d571';
-    var url = "https://pixabay.com/api/?key=" + API_KEY + "&q=" + encodeURIComponent(busqueda) + "&per_page=200";
+    var url = "https://pixabay.com/api/?key=" + API_KEY + "&q=" + encodeURIComponent(busqueda) + "&per_page=200&image_type='photos'&lang=es";
     envio.open("GET", url, true);
     envio.send();
 }
@@ -187,8 +194,7 @@ function comentarios(elemento) {
     }
     let aux = elemento.getFoto3;
     aux.style.order = "1";
-    //document.querySelector("#comentarImagen").style.display = "flex";
-    mostrarElemento("comentarImagen");
+    document.querySelector("#comentarImagen").style.display = "flex";
     document.querySelector("#comentarImagen").append(aux);
     document.querySelector("#like").onclick = darLike;
 
@@ -201,15 +207,9 @@ function comentarios(elemento) {
 
 function busquedaNueva(busqueda) {
     if (!busqueda) {
-        let bus=document.querySelector("#buscador").value;
-        if(bus==""){
-            busqueda = "imagenes";
-        }else{
-            busqueda=bus;
-        }
+        busqueda = document.querySelector("#buscador").value;
     }
-    //document.querySelector("#contenedor").style.display = "flex";
-    mostrarElemento("contenedor");
+    document.querySelector("#contenedor").style.display = "flex";
     document.querySelector("#comentarImagen").style.display = "none";
     numFotosCargadas = 9;
     buscarImagenes(busqueda, true);
@@ -252,17 +252,13 @@ function comprobarFormulario(tipoFormulario) {
 function peticionServidor1(peticion) {
     let envio = new XMLHttpRequest();
     let data = new FormData();
-    data.append("correoElectronico", peticion[1]);
-    data.append("contrasena", peticion[2]);
-    data.append("usuario", peticion[0]);
+    data.append("correoElectronico", peticion[0]);
+    data.append("contrasena", peticion[1]);
+    data.append("edad", peticion[2]);
     envio.onreadystatechange = () => {
         if (envio.readyState == 4 && envio.status == 200) {
-            if (envio.responseText !== "") {
+            if (envio.responseText == false || envio.responseText == "false") {
                 mostrarAlert("correoRepetido");
-            } else {
-                document.querySelector("#formularioRegistro").style.display = "none";
-                //document.querySelector("#formularioInicioSesion").style.display = "block";
-                mostrarElemento("formularioInicioSesion");
             }
         }
     }
@@ -283,11 +279,8 @@ function peticionServidor2(peticion) {
 
     envio.onreadystatechange = () => {
         if (envio.readyState == 4 && envio.status == 200) {
-            if (envio.responseText != "") {
+            if (envio.responseText != 0 || envio.responseText != "0") {
                 sesionIniciada(envio.responseText);
-                document.querySelector("#formularioInicioSesion").style.display = "none";
-            } else {
-                mostrarAlert("falloInicioSesion");
             }
         }
     }
@@ -303,17 +296,12 @@ function peticionServidor2(peticion) {
 function sesionIniciada(nombreUsuario) {
     document.querySelector("#validarUsuario").style.display = "none";
     busquedaNueva("planeta tierra");
-    /*document.querySelector("#usu").style.display = "flex";
-    document.querySelector("#busqueda").style.display = "flex";*/
-    mostrarElemento("usu");
-    mostrarElemento("busqueda");
+    document.querySelector("#usu").style.display = "flex";
+    document.querySelector("#busqueda").style.display = "flex";
     document.querySelector("#usu").innerHTML = `Bienvenido ${nombreUsuario}`;
-    /*document.querySelector("#cerrarSesion").style.display = "block";
+    document.querySelector("#cerrarSesion").style.display = "block";
     document.querySelector("#subirImagen").style.display = "block";
-    document.querySelector("#contenedor").style.display = "flex";*/
-    mostrarElemento("cerrarSesion");
-    mostrarElemento("subirImagen");
-    mostrarElemento("contenedor");
+    document.querySelector("#contenedor").style.display = "flex";
     document.querySelector("#inicio").style.display = "none";
 }
 
@@ -322,15 +310,13 @@ function sesionIniciada(nombreUsuario) {
  */
 
 function sesionNoIniciada() {
-    //document.querySelector("#validarUsuario").style.display = "flex";
-    mostrarElemento("validarUsuario")
+    document.querySelector("#validarUsuario").style.display = "flex";
     document.querySelector("#usu").style.display = "none";
     document.querySelector("#busqueda").style.display = "none";
     document.querySelector("#cerrarSesion").style.display = "none";
     document.querySelector("#subirImagen").style.display = "none";
     document.querySelector("#contenedor").style.display = "none";
-    //document.querySelector("#inicio").style.display = "flex";
-    mostrarElemento("inicio");
+    document.querySelector("#inicio").style.display = "flex";
     document.querySelector("#comentarImagen").style.display = "none";
 }
 
@@ -345,7 +331,7 @@ function comprobarSesion() {
     data.append("comprobarSesion", true);
     envio.onreadystatechange = () => {
         if (envio.readyState == 4 && envio.status == 200) {
-            if (envio.responseText != "") {
+            if (envio.responseText != 0 || envio.responseText != "0") {
                 iniciar();
                 sesionIniciada(envio.responseText);
             } else {
@@ -387,7 +373,7 @@ function verificarImagen(elemento) {
             let respuesta = JSON.parse(envio.responseText);
             imagenActual = parseInt(respuesta[0]);
             elemento.setLikes = respuesta[1];
-            elemento.setDescripcion = respuesta[2];
+            elemento.setDescripcion=respuesta[2];
             comentarios(elemento);
             document.querySelector("#comentariosUsuarios").innerHTML = "";
             if (respuesta.length >= 3) {
@@ -436,7 +422,6 @@ function darLike() {
 function comentarioNuevo() {
     let comentario = document.querySelector("#miComentario").value;
 
-    if (comentario == "") { mostrarAlert("ComentarioVacio"); return }
     let envio = new XMLHttpRequest();
     let data = new FormData();
     data.append("comentario", comentario);
@@ -511,19 +496,6 @@ function mostrarAlert(fallo) {
         case "correoRepetido":
             alerta.innerHTML = "Ya existe una cuenta con ese correo electrónico";
             break;
-
-        case "falloInicioSesion":
-            alerta.innerHTML = "Compruebe su correo eléctrónico o su contraseña";
-            break;
-        case "ComentarioVacio":
-            alerta.innerHTML = "No puedes subir un comentario vacío";
-            break;
-        case "subidaImagenCorrecta":
-            alerta.innerHTML = "¡Imagen subida! Busca las etiquetas de tu imagen para ver tu creación.";
-            break;
-        case "subidaImagenFallida":
-            alerta.innerHTML = "Rellena todos los campos para compartir tu imagen con el mundo";
-            break;
         default:
             alerta.innerHTML = "Fallo en la aplicación. Disculpe las molestias";
     }
@@ -564,7 +536,6 @@ function actualizarComentarioUsuario() {
  */
 
 function subirImagen(imagen) {
-    
     let env = new FormData();
     env.append("image", imagen);
     //data.append("imagenURL",imagenURL);
@@ -578,9 +549,12 @@ function subirImagen(imagen) {
             document.querySelector("#vistaPrevia").style.backgroundPosition = "center";
             document.querySelector("#vistaPrevia").style.backgroundRepeat = "no-repeat";
             document.querySelector("#vistaPrevia").style.backgroundSize = "cover";
+
             document.querySelector("#subir").onclick = () => {
+
                 registrarImagen(ele.src, document.querySelector("#descripcion").value, document.querySelector("#etiquetas").value);
             }
+
         }
     }
 
@@ -595,21 +569,6 @@ function subirImagen(imagen) {
  */
 
 function registrarImagen(imagen, descripcion, etiquetas) {
-    if (imagen == "" || descripcion == "" || etiquetas == "") {
-        mostrarAlert("subidaImagenFallida");
-        return;
-    } else {
-        mostrarAlert("subidaImagenCorrecta");
-        document.querySelector("#cargarImagen").style.display = "none";
-        document.querySelector(`#cargarImagen textarea`) ? document.querySelector(`#cargarImagen textarea`).value = "" : false;
-        let arregloInput = document.querySelectorAll(`#cargarImagen input`);
-
-        for (let i = 0; i < arregloInput.length; i++) {
-            arregloInput[i].value = "";
-        }
-
-        document.querySelector(`#vistaPrevia`).style.display = "none";
-    }
     let env = new FormData();
     env.append("urlImagen", imagen);
     env.append("descripcion", descripcion);
@@ -627,7 +586,7 @@ function registrarImagen(imagen, descripcion, etiquetas) {
  * de un objeto Imagen.
  */
 
-function buscarImagenesUsuarios() {
+function buscarImagenesUsuarios(){
     let env = new FormData();
     env.append("etiqueta", document.querySelector("#buscador").value);
 
@@ -635,30 +594,22 @@ function buscarImagenesUsuarios() {
 
     envio.onreadystatechange = () => {
         if (envio.readyState == 4 && envio.status == 200) {
-            if (envio.responseText == 0 || envio.responseText == "0") {
-                return;
-            } else {
-                let arreglo = JSON.parse(envio.responseText);
-                for (let i = 0; i < arreglo.length; i += 4) {
-                    let ele = new Foto(arreglo[i], arreglo[i + 1], arreglo[i + 2], arreglo[i + 3]);
-                    let aux = ele.getFoto;
-                    document.querySelector("#contenedor").append(aux);
-                    aux.onclick = () => { comentarios(ele); verificarImagen(ele) };
-                }
+           if(envio.responseText==0||envio.responseText=="0"){
+               return;
+           }else{
+               let arreglo=JSON.parse(envio.responseText);
+               for (let i = 0; i < arreglo.length; i+=4) {
+                let ele = new Foto(arreglo[i], arreglo[i+1], arreglo[i+2], arreglo[i+3]);
+                console.log(ele);
+                let aux = ele.getFoto;
+                document.querySelector("#contenedor").append(aux);
+                aux.onclick = () => { comentarios(ele); verificarImagen(ele) };
             }
+           }
 
         }
     }
 
     envio.open("POST", "servidor.php");
     envio.send(env);
-}
-
-function mostrarElemento(elemento){
-    let ele=document.querySelector(`#${elemento}`);
-    ele.style.display="flex";
-    ele.style.opacity = "0%";
-    setTimeout(() => {
-        ele.style.opacity = "1";
-    }, 300);
 }

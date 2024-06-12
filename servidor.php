@@ -6,10 +6,14 @@
      * Verifica que existe una sesion de usuario. Esta no se cerrará hasta que el usuario cierre el navegador.
      */
     if(isset($_POST["comprobarSesion"])){
+        
     if(isset($_SESSION["usuario"])){
         echo $_SESSION["usuario"];
+        exit();
+    }else{
+        echo 0;
+        exit();
     }
-    exit();
     }
 
     /**
@@ -44,10 +48,10 @@
         if(!$resultado){
             $consulta="insert into imagenes (id_imagen2,likes) values ('{$_POST['id']}','{$_POST['likes']}')";
             $ejecucion=mysqli_query($conexion, $consulta);
-            $consulta="select id_imagen,likes,descripcion from imagenes where id_imagen2='{$_POST['id']}'";
+            $consulta="select id_imagen,likes from imagenes where id_imagen2='{$_POST['id']}'";
         $ejecucion=mysqli_query($conexion, $consulta);
         $resultado=mysqli_fetch_row($ejecucion);
-        array_push($arreglo,$resultado[0],$resultado[1],$resultado[2]);
+        array_push($arreglo,$resultado[0],$resultado[1]);
         
         $respuesta=json_encode($arreglo);
         echo $respuesta;
@@ -57,7 +61,7 @@
             $arreglo[1]=$resultado[1];
             $arreglo[2]=$resultado[2];
 
-        $consulta="select c.comentario,u.usuario,c.fecha from comentarios c join usuarios u on c.id_usuario=u.id_usuario where id_imagen={$resultado[0]} order by c.fecha desc";
+        $consulta="select c.comentario,u.email,c.fecha from comentarios c join usuarios u on c.id_usuario=u.id_usuario where id_imagen={$resultado[0]} order by c.fecha desc";
         $ejecucion=mysqli_query($conexion, $consulta);
         $resultado=mysqli_fetch_row($ejecucion);
         while(!empty($resultado)){
@@ -77,31 +81,31 @@
  * sino que enviará false como respuesta del servidor.
  */
 
-    if(isset($_POST["usuario"])){
+    if(isset($_POST["edad"])){
         $consulta="Select * from usuarios where email='{$_POST['correoElectronico']}'";
         $ejecucion=mysqli_query($conexion, $consulta);
         $resultado=mysqli_fetch_row($ejecucion);
-        if(!$resultado){
-            $consulta="Insert into usuarios (email,contrasena,usuario) values ('{$_POST['correoElectronico']}','{$_POST['contrasena']}','{$_POST['usuario']}')";
-            $ejecucion=mysqli_query($conexion, $consulta);
+        if($resultado){
+            echo "false";
+            exit();
         }else{
-            echo "repetido";
+            echo $consulta;
+            $consulta="Insert into usuarios (email,contrasena,edad) values ('{$_POST['correoElectronico']}','{$_POST['contrasena']}','{$_POST['edad']}')";
+            $ejecucion=mysqli_query($conexion, $consulta);
         }
         exit();
-    }
-    
-    if(isset($_POST["correoElectronico"])){
-        $consulta="Select email,usuario from usuarios where email='{$_POST['correoElectronico']}' and contrasena='{$_POST['contrasena']}'";
+    }else if(isset($_POST["correoElectronico"])){
+        $consulta="Select * from usuarios where email='{$_POST['correoElectronico']}' and contrasena='{$_POST['contrasena']}'";
         $ejecucion=mysqli_query($conexion, $consulta);
         $resultado=mysqli_fetch_row($ejecucion);
         if($resultado){
-            //$_SESSION["usuario"]=$_POST['correoElectronico'];
-            $_SESSION["usuario"]=$resultado[1];
-            //echo $_POST['correoElectronico'];
-            echo $resultado[1];
+            $_SESSION["usuario"]=$_POST['correoElectronico'];
+            echo $_POST['correoElectronico'];
+            exit();
+        }else{
+            echo 0;
+            exit();
         }
-        exit();
-        
     }
 
 /**
@@ -109,7 +113,7 @@
  */
 
     if(isset($_POST["comentario"])){
-        $consulta="Insert into comentarios (id_imagen,id_usuario,comentario) select {$_POST['imagenid']},id_usuario,'{$_POST['comentario']}' from usuarios where usuario='{$_SESSION['usuario']}'";
+        $consulta="Insert into comentarios (id_imagen,id_usuario,comentario) select {$_POST['imagenid']},id_usuario,'{$_POST['comentario']}' from usuarios where email='{$_SESSION['usuario']}'";
         $ejecucion=mysqli_query($conexion, $consulta);
         exit();
     }
@@ -120,7 +124,7 @@
 
     if(isset($_POST["imagenActual"])){
         $arreglo2=[];
-        $consulta="select c.comentario,u.usuario,c.fecha from comentarios c join usuarios u on c.id_usuario=u.id_usuario where c.id_imagen={$_POST['imagenActual']} order by c.fecha desc";        
+        $consulta="select c.comentario,u.email,c.fecha from comentarios c join usuarios u on c.id_usuario=u.id_usuario where c.id_imagen={$_POST['imagenActual']} order by c.fecha desc";        
         $ejecucion=mysqli_query($conexion, $consulta);
         $resultado=mysqli_fetch_row($ejecucion);
         while(!empty($resultado)){

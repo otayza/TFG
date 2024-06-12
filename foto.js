@@ -1,8 +1,12 @@
+/**
+ * Clase que permitirá crear objetos fotos mostrando 3 vistas diferentes
+ */
+
 class Foto {
-    constructor(imagen, autor,id,likes) {
+    constructor(imagen, autor, id, likes) {
         this.imagen = imagen;
         this.autor = autor;
-        this.id=id;
+        this.id = id;
         this.likes = likes;
         this.descripcion = "Sin descripción";
     }
@@ -21,13 +25,17 @@ class Foto {
         this.likes = likes;
     }
 
-    get getLikes(){
+    get getLikes() {
         return this.likes;
     }
 
-    get getID(){
+    get getID() {
         return this.id;
     }
+
+    /**
+     * Primera visión, Foto con imagen y nombre de autor, versión para contenedor de imágenes
+     */
 
     get getFoto() {
         let ele = document.createElement("div");
@@ -36,7 +44,7 @@ class Foto {
 
         let infoAutor = document.createElement("div");
         infoAutor.style.height = "15%";
-        infoAutor.innerHTML = "Por: "+this.autor;
+        infoAutor.innerHTML = "Por: " + this.autor;
 
         let contenedorImagen = document.createElement("div");
         contenedorImagen.style.width = "100%";
@@ -51,6 +59,10 @@ class Foto {
         ele.classList.add("foto");
         return ele;
     }
+
+    /**
+     * Segunda visión, solo se ve la foto. Visible en el menú sin haberse registrado o iniciado sesión
+     */
 
     get getFoto2() {
         let ele = document.createElement("div");
@@ -69,6 +81,10 @@ class Foto {
         ele.classList.add("foto2");
         return ele;
     }
+
+    /**
+     * Tercera visión, disponible a la hora de comentar, esta visión incluye likes, descripción, autor e imagen
+     */
 
     get getFoto3() {
         let ele = document.createElement("div");
